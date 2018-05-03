@@ -45,8 +45,17 @@ namespace ElevatorLogicWinForm
 
         int FloorNum;
 
-        public int FloorNumber { get => FloorNum; set => FloorNum = value; }
-
+        public int FloorNumber
+        {
+            get
+            {
+                return FloorNum;
+            }
+            set
+            {
+                FloorNum = value;
+            }
+        }
 
         public FloorControls()
         {
@@ -56,22 +65,24 @@ namespace ElevatorLogicWinForm
         }
 
 
-        public void UpButtonPressed(ElevatorStatus currentElevatorStatus)
+        public bool UpButtonPressed(ElevatorStatus currentElevatorStatus)
         {
             if (FloorNumber != HighestFloor)
             {
                 UpButton = true;
                 Priority = CalculatePriority(currentElevatorStatus);
             } //-- On Highest floor, there is no up button. Hence no else block is reqd
+            return UpButton;
         }
 
-        public void DownButtonPressed(ElevatorStatus currentElevatorStatus)
+        public bool DownButtonPressed(ElevatorStatus currentElevatorStatus)
         {
             if (FloorNumber != LowestFloor)
             {
                 DownButton = true;
                 Priority = CalculatePriority(currentElevatorStatus);
             } //-- On lowest floor, there is no down button. Hence no else block is reqd
+            return DownButton;
         }
 
         public bool DoesUpButtonRequireService()
@@ -174,19 +185,24 @@ namespace ElevatorLogicWinForm
         public ElevatorClass()
         {
             currStatus = new ElevatorStatus();
-            AllFloorControls = new FloorControls[10];
+            AllFloorControls = new FloorControls[11];
             currStatus.currentElevatorDirection = ElevatorDirectionEnum.Idle;
             currStatus.currentElevatorFloor = 0;
-            for (int i = 1; i < 10; i++)
+            for (int i = 0; i < 11; i++)
             {
                 AllFloorControls[i] = new FloorControls();
                 AllFloorControls[i].FloorNumber = i;
             }
         }
 
+        public void SetMaintenceMode()
+        {
+            currStatus.currentElevatorDirection = ElevatorDirectionEnum.Maintenence;
+        }
+
         public void UpButtonPressed(int Floor)
         {
-            if (Floor < 10)
+            if (Floor < 11)
             {
                 AllFloorControls[Floor].UpButtonPressed(currStatus);
             }
@@ -194,48 +210,14 @@ namespace ElevatorLogicWinForm
 
         public void DownButtonPressed(int Floor)
         {
-            if (Floor < 10)
+            if (Floor < 11)
             {
-                AllFloorControls[Floor].UpButtonPressed(currStatus);
+                AllFloorControls[Floor].DownButtonPressed(currStatus);
             }
         }
 
-        public void Move()
-        {
-            if (AllFloorControls[currStatus.currentElevatorFloor].DoesUpButtonRequireService())
-            {
+        
 
-            }
-
-            //-- Add weights of all floors  (if floor is above currentElevatorFloor, multiply with -1)
-            for (int i = 0; i < currStatus.currentElevatorFloor; i++)
-            {
-                if (i > currStatus.currentElevatorFloor)
-                {
-                    // AllFloorControls[Floor].GetPriority();
-                }
-
-            }
-        }
-        public void MoveUp()
-        {
-            for (var i = currStatus.currentElevatorFloor; i <= 10; i++) // Go to requested floor as per the weight calculated
-            {
-
-            }
-        }
-        public void MoveDown()
-        {
-            for (var i = currStatus.currentElevatorFloor; i >= 10; i++) // Go to requested floor as per the weight calculated
-            {
-
-            }
-        }
-
-        public void StopLift(int currentElevatorFloor)
-        {
-
-        }
     }
     
 
